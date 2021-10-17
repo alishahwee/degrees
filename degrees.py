@@ -100,6 +100,31 @@ def shortest_path(source, target):
     # Initialize an empty explored set
     explored = set()
 
+    while True:
+        if frontier.empty():
+            return None
+
+        # Choose a node from the frontier
+        node = frontier.remove()
+
+        # Return the solution if state equals the target
+        if node.state[1] == target:
+            shortest_path = []
+            while node.parent is not None:
+                shortest_path.append(node.state)
+                node = node.parent
+            shortest_path.reverse()
+            return shortest_path
+
+        # Mark node as explored
+        explored.add(node.state)
+
+        # Add neighbors to the frontier
+        for pair in neighbors_for_person(node.state[1]):
+            if not frontier.contains_state(pair) and pair not in explored:
+                child = Node(state=pair, parent=node, action=pair[0])
+                frontier.add(child)
+
 
 def person_id_for_name(name):
     """
